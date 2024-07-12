@@ -1,6 +1,3 @@
-Sim, compreendi. Vou elaborar um `README.md` que inclui uma descrição da API, instruções de instalação, detalhes sobre a integração com a API externa Spoonacular e um guia sobre como utilizar os endpoints disponíveis.
-
-```markdown
 # SpoonacularAPI - API para Buscar Receitas
 
 ## Descrição
@@ -142,14 +139,6 @@ def get_recipes():
     data = response.json()
     return jsonify(data)
 ```
-
-## Contribuição
-
-1. Faça um fork do repositório.
-2. Crie uma nova branch com sua feature (`git checkout -b feature/nova-feature`).
-3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`).
-4. Push para a branch (`git push origin feature/nova-feature`).
-5. Abra um Pull Request.
 
 ## Licença
 
