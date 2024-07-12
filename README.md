@@ -1,184 +1,156 @@
-# Spoonacular API Flask Application
+Sim, compreendi. Vou elaborar um `README.md` que inclui uma descrição da API, instruções de instalação, detalhes sobre a integração com a API externa Spoonacular e um guia sobre como utilizar os endpoints disponíveis.
 
-Esta aplicação é uma API Flask que interage com a API Spoonacular para buscar receitas. A API permite pesquisar receitas por nome e obter detalhes de uma receita específica.
+```markdown
+# SpoonacularAPI - API para Buscar Receitas
+
+## Descrição
+
+SpoonacularAPI é uma API desenvolvida para buscar receitas utilizando a API externa Spoonacular. A API permite buscar receitas e obter detalhes de receitas específicas, facilitando o acesso a uma vasta coleção de receitas diretamente do Spoonacular.
+
+## Tecnologias Utilizadas
+
+- **Flask**: Framework de micro serviços para construção de APIs em Python.
+- **Flask-CORS**: Extensão para permitir solicitações de outras origens.
+- **Requests**: Biblioteca HTTP para fazer requisições à API externa.
+- **Docker**: Para containerização da aplicação.
+- **Docker Compose**: Para orquestração dos containers.
 
 ## Estrutura do Projeto
 
-- `app.py`: Contém as rotas e lógica principal da API.
-- `README.md`: Documentação do projeto.
-
-## Requisitos
-
-- Python 3.x
-- Flask
-- requests
-- flask_cors
+- `app.py`: Arquivo principal da aplicação Flask.
+- `requirements.txt`: Arquivo com as dependências do projeto.
+- `Dockerfile`: Arquivo para construir a imagem Docker da aplicação.
+- `docker-compose.yml`: Arquivo de configuração do Docker Compose.
 
 ## Instalação
 
+### Pré-requisitos
+
+- Docker e Docker Compose instalados na sua máquina.
+
+### Passos para Configuração
+
 1. Clone o repositório:
 
-```bash
-git clone https://github.com/eunandocosta/spoonacularapi.git
-cd spoonacularapi
-```
+    ```bash
+    git clone https://github.com/eunandocosta/spoonacularapi.git
+    cd spoonacularapi
+    ```
 
-2. Crie e ative um ambiente virtual:
+2. Inicie os containers Docker:
 
-```bash
-python -m venv venv
-source venv/bin/activate  # No Windows, use `venv\Scripts\activate`
-```
+    ```bash
+    docker-compose up --build
+    ```
 
-3. Instale as dependências:
+3. A aplicação estará disponível em `http://localhost:5002`.
 
-```bash
-pip install -r requirements.txt
-```
+## Endpoints
 
-## Configuração
-
-Defina a chave da API Spoonacular no arquivo `app.py`:
-
-```python
-SPOONACULAR_API_KEY = 'eaec72804b5c4f34939d2a762312a1a2'
-```
-
-Se necessário, você pode obter a chave de API se registrando no [Spoonacular](https://spoonacular.com/food-api).
-
-## Uso
-
-### Iniciar o Servidor
-
-Inicie o servidor Flask:
-
-```bash
-flask run
-```
-
-A API estará disponível em `http://127.0.0.1:5002`.
-
-### Endpoints
-
-#### Buscar Receitas
-
-Busca receitas pelo nome.
+### Buscar Receitas
 
 - **URL**: `/recipes`
 - **Método**: `GET`
-- **Parâmetro de Consulta**: `query` (string)
+- **Descrição**: Busca receitas na API Spoonacular com base em um termo de consulta.
+- **Parâmetros**:
+    - `query`: Termo de busca para as receitas.
+- **Exemplo de Requisição**:
+    ```bash
+    curl "http://localhost:5002/recipes?query=pasta"
+    ```
+- **Exemplo de Resposta**:
+    ```json
+    {
+        "results": [
+            {
+                "id": 715538,
+                "title": "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs",
+                "image": "https://spoonacular.com/recipeImages/715538-312x231.jpg",
+                "imageType": "jpg"
+            }
+        ],
+        "offset": 0,
+        "number": 10,
+        "totalResults": 86
+    }
+    ```
 
-- **Exemplo**:
-
-  `GET /recipes?query=pasta`
-
-- **Resposta de Sucesso**: `200 OK`
-
-```json
-{
-    "results": [
-        {
-            "id": 654959,
-            "title": "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs",
-            "image": "https://spoonacular.com/recipeImages/654959-312x231.jpg",
-            "imageType": "jpg"
-        },
-        ...
-    ],
-    ...
-}
-```
-
-- **Resposta de Erro**: `400 Bad Request` se o parâmetro `query` não for fornecido.
-
-#### Detalhes da Receita
-
-Busca detalhes de uma receita pelo ID.
+### Buscar Detalhes de uma Receita
 
 - **URL**: `/recipes/<int:recipe_id>`
 - **Método**: `GET`
+- **Descrição**: Busca detalhes de uma receita específica na API Spoonacular.
+- **Parâmetros**:
+    - `recipe_id`: ID da receita para buscar os detalhes.
+- **Exemplo de Requisição**:
+    ```bash
+    curl "http://localhost:5002/recipes/715538"
+    ```
+- **Exemplo de Resposta**:
+    ```json
+    {
+        "id": 715538,
+        "title": "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs",
+        "image": "https://spoonacular.com/recipeImages/715538-556x370.jpg",
+        "sourceUrl": "http://www.bonappetit.com/recipe/pasta-with-garlic-scallions-cauliflower-breadcrumbs",
+        "summary": "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs might be just the main course you are searching for.",
+        "ingredients": [
+            {
+                "name": "garlic",
+                "amount": 2,
+                "unit": "cloves"
+            }
+        ],
+        "instructions": [
+            {
+                "number": 1,
+                "step": "Heat the oven to 425 degrees."
+            }
+        ]
+    }
+    ```
 
-- **Exemplo**:
+## Utilizando a API Externa Spoonacular
 
-  `GET /recipes/654959`
+A API externa Spoonacular é um serviço que fornece informações sobre receitas, ingredientes, nutrição, e muito mais. Para usar a API, você precisa obter uma chave de API do Spoonacular.
 
-- **Resposta de Sucesso**: `200 OK`
+### Passos para obter uma chave de API do Spoonacular:
 
-```json
-{
-    "id": 654959,
-    "title": "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs",
-    "image": "https://spoonacular.com/recipeImages/654959-556x370.jpg",
-    "servings": 2,
-    "readyInMinutes": 45,
-    "instructions": "...",
-    ...
-}
+1. Acesse [Spoonacular](https://spoonacular.com/food-api).
+2. Crie uma conta ou faça login.
+3. Navegue até a seção de API e obtenha a sua chave de API.
+
+### Integração com a API Spoonacular
+
+No código da aplicação, a chave de API é utilizada para autenticar as requisições feitas ao Spoonacular:
+
+```python
+SPOONACULAR_API_KEY = 'sua_chave_api_aqui'
+
+@app.route('/recipes', methods=['GET'])
+def get_recipes():
+    query = request.args.get('query')
+    if not query:
+        return jsonify({"error": "Parâmetro 'query' é necessário"}), 400
+    
+    url = f"https://api.spoonacular.com/recipes/complexSearch?query={query}&apiKey={SPOONACULAR_API_KEY}"
+    response = requests.get(url)
+    
+    if response.status_code != 200:
+        return jsonify({"error": "Erro ao buscar receitas"}), response.status_code
+
+    data = response.json()
+    return jsonify(data)
 ```
 
-- **Resposta de Erro**: `Erro ao buscar receitas` se a busca na API Spoonacular falhar.
+## Contribuição
 
-## Docker
-
-A aplicação pode ser executada usando Docker.
-
-### Dockerfile
-
-O `Dockerfile` define a imagem Docker para a aplicação:
-
-```dockerfile
-# Use uma imagem base oficial do Python como base
-FROM python:3.9-slim
-
-# Defina o diretório de trabalho
-WORKDIR /app
-
-# Copie o requirements.txt e instale as dependências
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copie o restante do código da aplicação
-COPY . .
-
-# Exponha a porta que o Flask está rodando
-EXPOSE 5002
-
-# Comando para rodar a aplicação
-CMD ["flask", "run", "--host=0.0.0.0", "--port=5002"]
-```
-
-### docker-compose.yml
-
-O `docker-compose.yml` define os serviços Docker para a aplicação:
-
-```yaml
-version: '3.8'
-
-services:
-  web:
-    build: .
-    ports:
-      - "5002:5002"
-    volumes:
-      - .:/app
-    environment:
-      - FLASK_ENV=development
-```
-
-### Usando Docker
-
-1. Construa e inicie os containers Docker:
-
-```bash
-docker-compose up --build
-```
-
-A API estará disponível em `http://127.0.0.1:5002`.
-
-## Contribuições
-
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
+1. Faça um fork do repositório.
+2. Crie uma nova branch com sua feature (`git checkout -b feature/nova-feature`).
+3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`).
+4. Push para a branch (`git push origin feature/nova-feature`).
+5. Abra um Pull Request.
 
 ## Licença
 
-Este projeto está licenciado sob a MIT License. Veja o arquivo `LICENSE` para mais detalhes.
+Este projeto está licenciado sob a MIT License - veja o arquivo LICENSE para mais detalhes.
